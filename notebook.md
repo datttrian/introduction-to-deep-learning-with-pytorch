@@ -19,7 +19,19 @@ and displaying some of its attributes.
 **Answer**
 
 ```{python}
+# Import PyTorch
+import torch
 
+list_a = [1, 2, 3, 4]
+
+# Create a tensor from list_a
+tensor_a = torch.tensor(list_a)
+
+# Display the tensor device
+print(tensor_a.device)
+
+# Display the tensor data type
+print(tensor_a.dtype)
 ```
 
 ### Creating tensors from NumPy arrays
@@ -42,7 +54,19 @@ dimensions.
 **Answer**
 
 ```{python}
+# Create two tensors from the arrays
+tensor_a = torch.from_numpy(array_a)
+tensor_b = torch.from_numpy(array_b)
 
+# Subtract tensor_b from tensor_a 
+tensor_c = tensor_a - tensor_b
+
+# Multiply each element of tensor_a with each element of tensor_b
+tensor_d = tensor_a * tensor_b
+
+# Add tensor_c with tensor_d
+tensor_e = tensor_c + tensor_d
+print(tensor_e)
 ```
 
 ### Your first neural network
@@ -64,7 +88,18 @@ imported for you.
 **Answer**
 
 ```{python}
+import torch
+import torch.nn as nn
 
+input_tensor = torch.Tensor([[2, 3, 6, 7, 9, 3, 2, 1]])
+
+# Implement a small neural network with exactly two linear layers
+model = nn.Sequential(nn.Linear(8, 4),
+                      nn.Linear(4, 1),
+                     )
+
+output = model(input_tensor)
+print(output)
 ```
 
 ### The sigmoid and softmax functions
@@ -93,7 +128,19 @@ probability.
 **Answer**
 
 ```{python}
+input_tensor = torch.tensor([[0.8]])
 
+# Create a sigmoid function and apply it on input_tensor
+sigmoid = nn.Sigmoid()
+probability = sigmoid(input_tensor)
+print(probability)
+
+input_tensor = torch.tensor([[1.0, -6.0, 2.5, -0.3, 1.2, 0.8]])
+
+# Create a softmax function and apply it on input_tensor
+softmax = nn.Softmax(dim=-1)
+probabilities = softmax(input_tensor)
+print(probabilities)
 ```
 
 ## Training Our First Neural Network with PyTorch
@@ -121,7 +168,19 @@ imported for you.
 **Answer**
 
 ```{python}
+import torch
+import torch.nn as nn
 
+input_tensor = torch.Tensor([[3, 4, 6, 2, 3, 6, 8, 9]])
+
+# Implement a small neural network for binary classification
+model = nn.Sequential(
+  nn.Linear(8, 1),
+  nn.Sigmoid()
+)
+
+output = model(input_tensor)
+print(output)
 ```
 
 ### From regression to multi-class classification
@@ -148,7 +207,38 @@ then tweak the model to perform a multi-class classification.
 **Answer**
 
 ```{python}
+import torch
+import torch.nn as nn
 
+input_tensor = torch.Tensor([[3, 4, 6, 7, 10, 12, 2, 3, 6, 8, 9]])
+
+# Implement a neural network with exactly four linear layers
+model = nn.Sequential(
+  nn.Linear(11, 20),
+  nn.Linear(20, 12),
+  nn.Linear(12, 6),
+  nn.Linear(6, 1),  
+)
+
+output = model(input_tensor)
+print(output)
+
+import torch
+import torch.nn as nn
+
+input_tensor = torch.Tensor([[3, 4, 6, 7, 10, 12, 2, 3, 6, 8, 9]])
+
+# Update network below to perform a multi-class classification with four labels
+model = nn.Sequential(
+  nn.Linear(11, 20),
+  nn.Linear(20, 12),
+  nn.Linear(12, 6),
+  nn.Linear(6, 4), 
+  nn.Softmax()
+)
+
+output = model(input_tensor)
+print(output)
 ```
 
 ### Creating one-hot encoded labels
@@ -174,7 +264,14 @@ NumPy is already imported as `np`, and `torch.nn.functional` as `F`. The
 **Answer**
 
 ```{python}
+y = 1
+num_classes = 3
 
+# Create the one-hot encoded vector using NumPy
+one_hot_numpy = np.array([0, 1, 0])
+
+# Create the one-hot encoded vector using PyTorch
+one_hot_pytorch = F.one_hot(torch.tensor(y), num_classes)
 ```
 
 ### Calculating cross entropy loss
@@ -199,11 +296,51 @@ already been imported for you.
 
 - Create the one-hot encoded vector of the ground truth label `y` and
   assign it to `one_hot_label`.
+- Create the cross entropy loss function and store it as `criterion`.
+- Calculate the cross entropy loss using the `one_hot_label` vector and the `scores` vector, by calling the `loss_function` you created.
 
 **Answer**
 
 ```{python}
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
 
+y = [2]
+scores = torch.tensor([[0.1, 6.0, -2.0, 3.2]])
+
+# Create a one-hot encoded vector of the label y
+one_hot_label = F.one_hot(torch.tensor(y), num_classes=scores.shape[1])
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+y = [2]
+scores = torch.tensor([[0.1, 6.0, -2.0, 3.2]])
+
+# Create a one-hot encoded vector of the label y
+one_hot_label = F.one_hot(torch.tensor(y), num_classes = scores.shape[1])
+
+# Create the cross entropy loss function
+criterion = nn.CrossEntropyLoss()
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+y = [2]
+scores = torch.tensor([[0.1, 6.0, -2.0, 3.2]])
+
+# Create a one-hot encoded vector of the label y
+one_hot_label = F.one_hot(torch.tensor(y), scores.shape[1])
+
+# Create the cross entropy loss function
+criterion = nn.CrossEntropyLoss()
+
+# Calculate the cross entropy loss
+loss = criterion(scores.double(), one_hot_label.double())
+print(loss)
 ```
 
 ### Estimating a sample
@@ -239,7 +376,17 @@ The following tensors are provded:
 **Answer**
 
 ```{python}
+criterion = nn.CrossEntropyLoss()
 
+# Calculate the loss
+loss = criterion(preds, target)
+
+# Compute the gradients of the loss
+loss.backward()
+
+# Display gradients of the weight and bias tensors in order
+print(weight.grad)
+print(bias.grad)
 ```
 
 ### Accessing the model parameters
@@ -259,7 +406,15 @@ sigmoid.
 **Answer**
 
 ```{python}
+model = nn.Sequential(nn.Linear(16, 8),
+                      nn.Sigmoid(),
+                      nn.Linear(8, 2))
 
+# Access the weight of the first linear layer
+weight_0 = model[0].weight
+
+# Access the bias of the second linear layer
+bias_1 = model[2].bias
 ```
 
 ### Updating the weights manually
@@ -282,7 +437,28 @@ loss and its derivatives have been calculated. A default learning rate,
 **Answer**
 
 ```{python}
+weight0 = model[0].weight
+weight1 = model[1].weight
+weight2 = model[2].weight
 
+# Access the gradients of the weight of each linear layer
+grads0 = weight0.grad
+grads1 = weight1.grad
+grads2 = weight2.grad
+
+weight0 = model[0].weight
+weight1 = model[1].weight
+weight2 = model[2].weight
+
+# Access the gradients of the weight of each linear layer
+grads0 = weight0.grad
+grads1 = weight1.grad
+grads2 = weight2.grad
+
+# Update the weights using the learning rate and the gradients
+weight0 = weight0 - lr * grads0
+weight1 = weight1 - lr * grads1
+weight2 = weight2 - lr * grads2
 ```
 
 ### Using the PyTorch optimizer
@@ -308,11 +484,22 @@ loaded for you.
 
 - Use `optim` to create an SGD optimizer with a learning rate of your
   choice (must be less than one) for the `model` provided.
+- Update the model's parameters using the optimizer.
 
 **Answer**
 
 ```{python}
+# Create the optimizer
+optimizer = optim.SGD(model.parameters(), lr=0.001)
 
+# Create the optimizer
+optimizer = optim.SGD(model.parameters(), lr=0.001)
+
+loss = criterion(pred, target)
+loss.backward()
+
+# Update the model's parameters using the optimizer
+optimizer.step()
 ```
 
 ### Using the MSELoss
@@ -335,7 +522,18 @@ The `torch` package has been imported as well as `numpy` as `np` and
 **Answer**
 
 ```{python}
+y_hat = np.array(10)
+y = np.array(1)
 
+# Calculate the MSELoss using NumPy
+mse_numpy = np.mean((y_hat - y)**2)
+
+# Create the MSELoss function
+criterion = nn.MSELoss()
+
+# Calculate the MSELoss using the created loss function
+mse_pytorch = criterion(torch.tensor(y_hat).float(), torch.tensor(y).float())
+print(mse_pytorch)
 ```
 
 ### Writing a training loop
@@ -365,11 +563,48 @@ the SGD optimizer; and `num_epochs`, containing the number of epochs.
   nested within a for loop that iterates over a range equal to the
   number of epochs.
 - Set the gradients of the optimizer to zero.
+- Write the forward pass.
+- Compute the MSE loss value using the criterion() function provided.
+- Compute the gradients.
+- Update the model's parameters.
 
 **Answer**
 
 ```{python}
+# Loop over the number of epochs and then the dataloader
+for i in range(num_epochs):
+  for data in dataloader:
+    # Set the gradients to zero
+    optimizer.zero_grad()
 
+# Loop over the number of epochs and the dataloader
+for i in range(num_epochs):
+  for data in dataloader:
+    # Set the gradients to zero
+    optimizer.zero_grad()
+    # Run a forward pass
+    feature, target = data
+    prediction = model(feature)    
+    # Calculate the loss
+    loss = criterion(prediction, target)    
+    # Compute the gradients
+    loss.backward()
+
+# Loop over the number of epochs and the dataloader
+for i in range(num_epochs):
+  for data in dataloader:
+    # Set the gradients to zero
+    optimizer.zero_grad()  
+    # Run a forward pass
+    feature, target = data
+    prediction = model(feature)    
+    # Calculate the loss
+    loss = criterion(prediction, target)    
+    # Compute the gradients
+    loss.backward()
+    # Update the model's parameters
+    optimizer.step()
+show_results(model, dataloader)
 ```
 
 ## Neural Network Architecture and Hyperparameters
@@ -390,11 +625,26 @@ The `nn` module has already been imported for you.
 **Instructions**
 
 - Create a ReLU function in PyTorch.
+- Calculate the gradient of the ReLU function for `x` using the `relu_pytorch()` function you defined, then running a backward pass
+- Find the gradient at `x`.
 
 **Answer**
 
 ```{python}
+# Create a ReLU function with PyTorch
+relu_pytorch = nn.ReLU()
 
+# Create a ReLU function with PyTorch
+relu_pytorch = nn.ReLU()
+
+# Apply your ReLU function on x, and calculate gradients
+x = torch.tensor(-1.0, requires_grad=True)
+y = relu_pytorch(x)
+y.backward()
+
+# Print the gradient of the ReLU function for x
+gradient = x.grad
+print(gradient)
 ```
 
 ### Implementing leaky ReLU
@@ -421,7 +671,13 @@ imported.
 **Answer**
 
 ```{python}
+# Create a leaky relu function in PyTorch
+leaky_relu_pytorch = nn.LeakyReLU(negative_slope=0.05)
 
+x = torch.tensor(-2.0)
+# Call the above function on the tensor x
+output = leaky_relu_pytorch(x)
+print(output)
 ```
 
 ### Counting the number of parameters
@@ -444,7 +700,15 @@ The `torch.nn` package has been imported as `nn`.
 **Answer**
 
 ```{python}
+model = nn.Sequential(nn.Linear(16, 4),
+                      nn.Linear(4, 2),
+                      nn.Linear(2, 1))
 
+total = 0
+
+# Calculate the number of parameters in the model
+for p in model.parameters():
+  total += p.numel()
 ```
 
 ### Manipulating the capacity of a network
@@ -479,7 +743,33 @@ Create a neural network with exactly four linear layers and more than
 **Answer**
 
 ```{python}
+n_features = 8
+n_classes = 2
 
+input_tensor = torch.Tensor([[3, 4, 6, 2, 3, 6, 8, 9]])
+
+# Create a neural network with less than 120 parameters
+model = nn.Sequential(nn.Linear(n_features, 8),
+                      nn.Linear(8, 4),
+                      nn.Linear(4, n_classes))
+output = model(input_tensor)
+
+print(calculate_capacity(model))
+
+n_features = 8
+n_classes = 2
+
+input_tensor = torch.Tensor([[3, 4, 6, 2, 3, 6, 8, 9]])
+
+# Create a neural network with more than 120 parameters
+model = nn.Sequential(nn.Linear(n_features, 16),
+                      nn.Linear(16, 8),
+                      nn.Linear(8, 3), 
+                      nn.Linear(3, n_classes))
+
+output = model(input_tensor)
+
+print(calculate_capacity(model))
 ```
 
 ### Experimenting with learning rate
@@ -512,7 +802,17 @@ the SGD optimizer and display the results.
 **Answer**
 
 ```{python}
+# Try a first learning rate value
+lr0 = 0.005
+optimize_and_plot(lr=lr0)
 
+# Try a second learning rate value
+lr1 = 0.1
+optimize_and_plot(lr=lr1)
+
+# Try a third learning rate value
+lr2 = 0.09
+optimize_and_plot(lr=lr2)
 ```
 
 ### Experimenting with momentum
@@ -540,7 +840,13 @@ the SGD optimizer and display the results.
 **Answer**
 
 ```{python}
+# Try a first value for momentum
+mom0 = 0.85
+optimize_and_plot(momentum=mom0)
 
+# Try a second value for momentum
+mom1 = 0.95
+optimize_and_plot(momentum=mom1)
 ```
 
 ### Freeze layers of a model
@@ -568,7 +874,19 @@ Remember that a linear layer has two parameters: the `weight` and the
 **Answer**
 
 ```{python}
-
+for name, param in model.named_parameters():
+  
+    # Check if the parameters belong to the first layer
+    if name == '0.weight' or name == '0.bias':
+   
+        # Freeze the parameters
+        param.requires_grad = False
+        
+    # Check if the parameters belong to the second layer
+    if name == '1.weight' or name == '1.bias':
+      
+        # Freeze the parameters
+        param.requires_grad = False
 ```
 
 ### Layer initialization
@@ -591,7 +909,14 @@ to initialize each layer's weights with the uniform method.
 **Answer**
 
 ```{python}
+layer0 = nn.Linear(16, 32)
+layer1 = nn.Linear(32, 64)
 
+# Use uniform initialization for layer0 and layer1 weights
+nn.init.uniform_(layer0.weight)
+nn.init.uniform_(layer1.weight)
+
+model = nn.Sequential(layer0, layer1)
 ```
 
 ## Evaluating and Improving Models
@@ -622,7 +947,22 @@ TensorDataset class.
 **Answer**
 
 ```{python}
+import numpy as np
+import torch
+from torch.utils.data import TensorDataset
 
+np_features = np.array(np.random.rand(12, 8))
+np_target = np.array(np.random.rand(12, 1))
+
+# Convert arrays to PyTorch tensors
+torch_features = torch.tensor(np_features)
+torch_target = torch.tensor(np_target)
+
+# Create a TensorDataset from two tensors
+dataset = TensorDataset(torch_features, torch_target)
+
+# Return the last element of this dataset
+print(dataset[-1])
 ```
 
 ### From data loading to running a forward pass
@@ -651,11 +991,49 @@ NumPy as `np`, pandas as `pd`, `torch`, `TensorDataset()`, and
 - Use both tensors to create a PyTorch dataset using the dataset class
   that's quickest to use when tensors don't require any additional
   preprocessing.
+- Create a PyTorch `DataLoader` from the created `TensorDataset`; this `DataLoader` should use a `batch_size` of two and `shuffle` the dataset.
+- Implement a small, fully connected neural network using exactly two linear layers and the `nn.Sequential()` API, where the final output size is 1.
 
 **Answer**
 
 ```{python}
+# Load the different columns into two PyTorch tensors
+features = torch.tensor(dataframe[['ph', 'Sulfate', 'Conductivity', 'Organic_carbon']].to_numpy()).float()
+target = torch.tensor(dataframe['Potability'].to_numpy()).float()
 
+# Create a dataset from the two generated tensors
+dataset = TensorDataset(features, target)
+
+# Load the different columns into two PyTorch tensors
+features = torch.tensor(dataframe[['ph', 'Sulfate', 'Conductivity', 'Organic_carbon']].to_numpy()).float()
+target = torch.tensor(dataframe['Potability'].to_numpy()).float()
+
+# Create a dataset from the two generated tensors
+dataset = TensorDataset(features, target)
+
+# Create a dataloader using the above dataset
+dataloader = DataLoader(dataset, shuffle=True, batch_size=2)
+x, y = next(iter(dataloader))
+
+# Load the different columns into two PyTorch tensors
+features = torch.tensor(dataframe[['ph', 'Sulfate', 'Conductivity', 'Organic_carbon']].to_numpy()).float()
+target = torch.tensor(dataframe['Potability'].to_numpy()).float()
+
+# Create a dataset from the two generated tensors
+dataset = TensorDataset(features, target)
+
+# Create a dataloader using the above dataset
+dataloader = DataLoader(dataset, shuffle=True, batch_size=2)
+x, y = next(iter(dataloader))
+
+# Create a model using the nn.Sequential API
+model = nn.Sequential(
+  nn.Linear(4, 16), 
+  nn.Linear(16, 1)
+)
+
+output = model(features)
+print(output)
 ```
 
 ### Writing the evaluation loop
@@ -671,11 +1049,46 @@ The `model` has already been defined for you, along with the object
 
 - Set the model to evaluation mode.
 - Sum the current batch loss to the `validation_loss` variable.
+- Calculate the mean loss value for the epoch.
+- Set the model back to training mode.
 
 **Answer**
 
 ```{python}
+# Set the model to evaluation mode
+model.eval()
+validation_loss = 0.0
 
+with torch.no_grad():
+  
+  for data in validationloader:
+    
+      outputs = model(data[0])
+      loss = criterion(outputs, data[1])
+      
+      # Sum the current loss to the validation_loss variable
+      validation_loss += loss.item()
+
+# Set the model to evaluation mode
+model.eval()
+validation_loss = 0.0
+
+with torch.no_grad():
+  
+  for data in validationloader:
+    
+      outputs = model(data[0])
+      loss = criterion(outputs, data[1])
+      
+      # Sum the current loss to the validation_loss variable
+      validation_loss += loss.item()
+      
+# Calculate the mean loss value
+validation_loss_epoch = validation_loss / len(validationloader)
+print(validation_loss_epoch)
+
+# Set the model back to training mode
+model.train()
 ```
 
 ### Calculating accuracy using torchmetrics
@@ -700,11 +1113,36 @@ The `labels` tensor contains the labels as one-hot encoded vectors.
 - Create an accuracy metric for a `"multiclass"` problem with three
   classes.
 - Calculate the accuracy for each batch of the dataloader.
+- Calculate accuracy for the epoch.
+- Reset the metric for the next epoch.
 
 **Answer**
 
 ```{python}
+# Create accuracy metric using torch metrics
+metric = torchmetrics.Accuracy(task="multiclass", num_classes=3)
+for data in dataloader:
+    features, labels = data
+    outputs = model(features)
+    
+    # Calculate accuracy over the batch
+    acc = metric(outputs, labels.argmax(dim=-1))
 
+# Create accuracy metric using torch metrics
+metric = torchmetrics.Accuracy(task="multiclass", num_classes=3)
+for data in dataloader:
+    features, labels = data
+    outputs = model(features)
+    
+    # Calculate accuracy over the batch
+    acc = metric(outputs.softmax(dim=-1), labels.argmax(dim=-1))
+    
+# Calculate accuracy over the whole epoch
+acc = metric.compute()
+
+# Reset the metric for the next epoch (training or validation)
+metric.reset()
+plot_errors(model, dataloader)
 ```
 
 ### Experimenting with dropout
@@ -732,7 +1170,17 @@ The `torch.nn` package has already been imported as `nn`. An
 **Answer**
 
 ```{python}
+# Create a small neural network
+model = nn.Sequential(nn.Linear(3072, 16),
+                      nn.ReLU(),
+                      nn.Dropout())
+model(input_tensor)
 
+# Using the same model, set the dropout probability to 0.8
+model = nn.Sequential(nn.Linear(3072, 16),
+                      nn.ReLU(),
+                      nn.Dropout(p=0.8))
+model(input_tensor)
 ```
 
 ### Implementing random search
@@ -757,5 +1205,14 @@ The `numpy` package has already been imported as `np`.
 **Answer**
 
 ```{python}
-
+values = []
+for idx in range(10):
+    # Randomly sample a learning rate factor 2 and 4
+    factor = np.random.uniform(2, 4)
+    lr = 10 ** -factor
+    
+    # Randomly sample a momentum between 0.85 and 0.99
+    momentum = np.random.uniform(0.85, 0.99)
+    
+    values.append((lr, momentum))
 ```
