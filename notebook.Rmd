@@ -81,8 +81,8 @@ imported for you.
 **Instructions**
 
 - Create a neural network of linear layers that takes a tensor of
-  dimensions \\1\times8\\ as input and outputs a tensor of dimensions
-  \\1\times1\\.
+  dimensions $1\times8$ as input and outputs a tensor of dimensions
+  $1\times1$.
 - Use any output dimension for the first layer you want.
 
 **Answer**
@@ -348,7 +348,7 @@ print(loss)
 In previous exercises, you used linear layers to build networks.
 
 Recall that the operation performed by `nn.Linear()` is to take an input
-\\X\\ and apply the transformation \\W\*X + b\\ ,where \\W\\ and \\b\\
+$X$ and apply the transformation $W*X + b$ ,where $W$ and $b$
 are two tensors (called the weight and bias).
 
 A critical part of training PyTorch models is to calculate gradients of
@@ -359,11 +359,11 @@ using cross entropy loss and a sample of data.
 
 The following tensors are provded:
 
-- `weight`: a \\2 \times 9\\-element tensor
-- `bias`: a \\2\\-element tensor
-- `preds`: a \\1 \times 2\\-element tensor containing the model
+- `weight`: a $2 \times 9$-element tensor
+- `bias`: a $2$-element tensor
+- `preds`: a $1 \times 2$-element tensor containing the model
   predictions
-- `target`: a \\1 \times 2\\-element one-hot encoded tensor containing
+- `target`: a $1 \times 2$-element one-hot encoded tensor containing
   the ground-truth label
 
 **Instructions**
@@ -776,7 +776,7 @@ print(calculate_capacity(model))
 
 In this exercise, your goal is to find the optimal learning rate such
 that the optimizer can find the minimum of the non-convex function
-\\x^{4} + x^{3} - 5x^{2}\\ in ten steps.
+$x^{4} + x^{3} - 5x^{2}$ in ten steps.
 
 You will experiment with three different learning rate values. For this
 problem, try learning rate values between 0.001 to 0.1.
@@ -819,7 +819,7 @@ optimize_and_plot(lr=lr2)
 
 In this exercise, your goal is to find the optimal momentum such that
 the optimizer can find the minimum of the following non-convex function
-\\x^{4} + x^{3} - 5x^{2}\\ in 20 steps. You will experiment with two
+$x^{4} + x^{3} - 5x^{2}$ in 20 steps. You will experiment with two
 different momentum values. For this problem, the learning rate is fixed
 at 0.01.
 
@@ -1153,7 +1153,7 @@ small neural network with at least two linear layers, two dropout
 layers, and two activation functions.
 
 The `torch.nn` package has already been imported as `nn`. An
-`input_tensor` of dimensions \\1 \times 3072\\ has been created for you.
+`input_tensor` of dimensions $1 \times 3072$ has been created for you.
 
 **Instructions**
 
@@ -1199,7 +1199,7 @@ The `numpy` package has already been imported as `np`.
 **Instructions**
 
 - Randomly sample a learning rate factor between `2` and `4` so that the
-  learning rate (`lr`) is bounded between \\10^{-2}\\ and \\10^{-4}\\.
+  learning rate (`lr`) is bounded between $10^{-2}$ and $10^{-4}$.
 - Randomly sample a momentum between 0.85 and 0.99.
 
 **Answer**
