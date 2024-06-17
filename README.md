@@ -1,7 +1,5 @@
 # Introduction to Deep Learning with PyTorch
 
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/datttrian/introduction-to-deep-learning-with-pytorch)
-
 This is a repository for the DataCamp course Introduction to Deep Learning with PyTorch. The
 full course is available from [DataCamp](https://www.datacamp.com/courses/introduction-to-deep-learning-with-pytorch).
 
